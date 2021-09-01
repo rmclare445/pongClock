@@ -50,6 +50,13 @@ void shutter_loop( uint16_t loops, uint16_t wait, uint32_t color, bool shut, boo
   }
 }
 
+void fullShutter_loop( bool shut ) {
+  uint8_t sec;
+  sec = rtc.now().second();
+  shutter_loop( 1, 40, Wheel( sec*255/60 ), false, true );
+  full_color(420, Wheel( sec*255/60 ));
+}
+
 void rainbowShutter_loop( uint16_t loops, uint16_t wait, bool shut, bool soft, bool showTime ) {
   for(j=0; j<256*loops; j++) {
     rainbowShutter( j, shut, soft );
@@ -59,10 +66,11 @@ void rainbowShutter_loop( uint16_t loops, uint16_t wait, bool shut, bool soft, b
   }  
 }
 
-void rainbowSweep( uint16_t loops, uint16_t wait ) {
+void rainbowSweep( uint16_t loops, uint16_t wait, uint32_t new_color ) {
   for(i=0; i<loops; i++) {
     rainbowWipe( wait );
-    wipe( wait, strip.Color(0,0,0) );
+    delay(500);
+    wipe( wait, new_color );
   }
 }
 

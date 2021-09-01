@@ -26,23 +26,23 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(128, PIN, NEO_GRB + NEO_KHZ800);
 #include "rainbow_patterns.h"
 #include "modes.h"
 
-int sec;
-
 void setup() {
   // Set up real-time clock and initialize with computer time
   rtc.begin();
   rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
   // Set up LED strip
   strip.begin();
-  strip.setBrightness(40);
+  strip.setBrightness(25);
   strip.show(); // Initialize all pixels to 'off'
 }
 
 void loop() {
-  //rainbow_loop( 1, 4, true );
-  //rainbowShutter_loop( 5, 4, false, true, true );
-  sec = rtc.now().second();
-  shutter_loop( 1, 40, Wheel( sec*255/60 ), false, true );
-  full_color(300, Wheel( sec*255/60 ));
-  //rainbowSweep( 4, 40 );
+  // Primary clock functioning
+  if (rtc.now().minute()==59 && rtc.now().second()>55) {
+    rainbowShutter_loop( 5, 4, false, true, true );
+  }
+  else if (rtc.now().second()>56 || rtc.now().second()<1) {
+    rainbowSweep( 1, 40, Wheel( rtc.now().second()*255/60 ) );
+  }
+  fullShutter_loop( true );
 }
