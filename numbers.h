@@ -1,8 +1,3 @@
-
-
-
-
-
 uint16_t led_num( int col, int row ) {
   if      (row>6)            {return strip.numPixels();}
   else if (row<0)            {return strip.numPixels();}
@@ -99,7 +94,7 @@ void showNumber(int num, int col, uint32_t color) {
 }
 
 
-
+//// Problem with showing zeros at midnight!
 void allNumbers(int hr1, int hr2, int mn1, int mn2, bool colon, uint32_t color) {
 
   if (mn1==0 && mn2==7) {v[mn2]=1;}
@@ -113,7 +108,7 @@ void allNumbers(int hr1, int hr2, int mn1, int mn2, bool colon, uint32_t color) 
 //    if (bdry%2==0) {int col = bdry/2 + wSum1;}
 //    else {int col = 
     showNumber(hr2, 8 - w[hr2] - v[10], color);
-    showNumber(-1, 8, color);
+    if (colon) {showNumber(-1, 8, color);}
     showNumber(mn1, 8 + w[10] + v[mn1], color);
     showNumber(mn2, 8 + w[10] + w[mn1] + v[mn1] + v[mn2], color);
   }
@@ -121,7 +116,7 @@ void allNumbers(int hr1, int hr2, int mn1, int mn2, bool colon, uint32_t color) 
     //int wSum = w[hr1] + w[hr2] + w[10] + w[mn1] + w[mn2];
     showNumber(hr1, 9 - w[hr2] - w[hr1] - v[10] - v[hr2], color);
     showNumber(hr2, 9 - w[hr2] - v[10], color);
-    showNumber(-1, 9, color);
+    if (colon) {showNumber(-1, 9, color);}
     showNumber(mn1, 9 + w[10] + v[mn1], color);
     showNumber(mn2, 9 + w[10] + w[mn1] + v[mn1] + v[mn2], color);
   }
@@ -146,5 +141,6 @@ void showClock( bool t_mil, uint32_t color ) {
     mn2 = now.minute() % 10;
   }
   else {mn1=0; mn2=now.minute();}
-  allNumbers(hr1, hr2, mn1, mn2, true, color);
+  if (now.second()%2==0) {allNumbers(hr1, hr2, mn1, mn2, true, color);}
+  else {allNumbers(hr1, hr2, mn1, mn2, false, color);}
 }

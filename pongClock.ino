@@ -7,6 +7,7 @@
 RTC_DS1307 rtc;
 
 #define PIN 6
+#define TMIL false
 
 // Sums for finding LED number based on row
 const int R[7]={-1,16,34,53,72,90,107};
@@ -25,6 +26,8 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(128, PIN, NEO_GRB + NEO_KHZ800);
 #include "rainbow_patterns.h"
 #include "modes.h"
 
+int sec;
+
 void setup() {
   // Set up real-time clock and initialize with computer time
   rtc.begin();
@@ -37,6 +40,9 @@ void setup() {
 
 void loop() {
   //rainbow_loop( 1, 4, true );
-  rainbowShutter_loop( 4, 4, false, true );
+  //rainbowShutter_loop( 5, 4, false, true, true );
+  sec = rtc.now().second();
+  shutter_loop( 1, 40, Wheel( sec*255/60 ), false, true );
+  full_color(300, Wheel( sec*255/60 ));
   //rainbowSweep( 4, 40 );
 }

@@ -41,13 +41,14 @@ void rainbowColumns( uint16_t j ) {
   }
 }
 
-void rainbowShutter( uint16_t j, bool shut ) {
-  uint8_t c, r, i;
-  if (shut==true) {i=-1;} else {i=1;}
+void rainbowShutter( uint16_t j, bool shut, bool soft ) {
+  uint8_t c, r, i, s;
+  if (shut) {i=-1;} else {i=1;}
+  if (soft) {s=20;} else {s=10;}
   for(c=1; c<11; c++) {
     for(r=0; r<7; r++) {
-      strip.setPixelColor(led_num(c, r), Wheel(((c*256/20)+j*i) & 255));
-      strip.setPixelColor(led_num(21-c, r), Wheel(((c*256/20)+j*i) & 255));
+      strip.setPixelColor(led_num(c, r), Wheel(((c*256/s)+j*i) & 255));
+      strip.setPixelColor(led_num(21-c, r), Wheel(((c*256/s)+j*i) & 255));
     }
   }
 }
