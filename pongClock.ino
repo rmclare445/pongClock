@@ -38,10 +38,10 @@ void setup() {
 
 void loop() {
   // Primary clock functioning
-  if (rtc.now().minute()==59 && rtc.now().second()>55) {
+  if (rtc.now().minute()==59 && rtc.now().second()>57) {
     rainbowShutter_loop( 5, 4, false, true, true );
   }
-  else if (rtc.now().second()>56 || rtc.now().second()<1) {
+  else if (rtc.now().second()>57) {
     rainbowSweep( 1, 40, Wheel( rtc.now().second()*255/60 ) );
   }
   fullShutter_loop( true );

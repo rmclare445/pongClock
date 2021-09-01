@@ -53,8 +53,9 @@ void rainbowShutter( uint16_t j, bool shut, bool soft ) {
   }
 }
 
-void rainbowWipe( uint16_t wait ) {
+void rainbowWipe( uint16_t wait, bool showTime ) {
   int c, r;
+  if (showTime) {showClock( TMIL, strip.Color(150,150,150) );}
   for(c=1; c<21; c++) {
     for(r=0; r<7; r++) {
       strip.setPixelColor(led_num(c,r), Wheel(((c*256/20)) & 255));

@@ -3,7 +3,7 @@ uint16_t i, j;
 // Will act as delay function but still updates clock
 //  Input 'wait' in seconds
 void full_color( uint16_t wait, uint32_t color ){
-  for(i=0; i<wait+1; i++) {
+  for(i=0; i<wait; i++) {
     showClock( TMIL, strip.Color(150,150,150) );
     strip.show();
     delay(1);
@@ -54,7 +54,7 @@ void fullShutter_loop( bool shut ) {
   uint8_t sec;
   sec = rtc.now().second();
   shutter_loop( 1, 40, Wheel( sec*255/60 ), false, true );
-  full_color(420, Wheel( sec*255/60 ));
+  full_color(300, Wheel( sec*255/60 ));
 }
 
 void rainbowShutter_loop( uint16_t loops, uint16_t wait, bool shut, bool soft, bool showTime ) {
@@ -68,7 +68,7 @@ void rainbowShutter_loop( uint16_t loops, uint16_t wait, bool shut, bool soft, b
 
 void rainbowSweep( uint16_t loops, uint16_t wait, uint32_t new_color ) {
   for(i=0; i<loops; i++) {
-    rainbowWipe( wait );
+    rainbowWipe( wait, true );
     delay(500);
     wipe( wait, new_color );
   }
