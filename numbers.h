@@ -96,6 +96,7 @@ void showNumber(int num, int col, uint32_t color) {
 
 
 // Determines how numbers are spced/displayed
+////  Really must create new spacing mechanism
 void allNumbers(int hr1, int hr2, int mn1, int mn2, bool colon, uint32_t color) {
   uint8_t col_spot;
 

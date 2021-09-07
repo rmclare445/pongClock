@@ -63,6 +63,7 @@ void rainbowWipe( uint16_t wait, bool showTime ) {
       strip.setPixelColor(led_num(c,r), Wheel(((c*256/20)) & 255));
     }
     strip.show();
+    if (c==20) {return;}
     delay(wait);
   }
 }

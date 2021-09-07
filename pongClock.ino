@@ -34,10 +34,10 @@ void setup() {
   }
   // Set up LED strip
   strip.begin();
-  strip.setBrightness(25);
+  strip.setBrightness(15);
   strip.show(); // Initialize all pixels to 'off'
-  // Greeting sequence -- should make a unique greeting sequence
-  rainbowSweep( 1, 40, false, Wheel( rtc.now().second()*255/60 ) );
+  // Greeting sequence
+  greeting( 50 );
 }
 
 void loop() {
@@ -48,7 +48,7 @@ void loop() {
     rainbowShutter_loop( 4, 2, false, true, true );
   }
   else if (rtc.now().second()>57) {
-    rainbowSweep( 1, 40, true, Wheel( rtc.now().second()*255/60 ) );
+    rainbowSweep( 1, 40, true );
   }
   fullShutter_loop( true );
   // Secondary - Demo mode

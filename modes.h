@@ -74,12 +74,18 @@ void rainbowShutter_loop( uint16_t loops, uint16_t wait, bool shut, bool soft, b
 }
 
 //
-void rainbowSweep( uint16_t loops, uint16_t wait, bool trans, uint32_t new_color ) {
+void rainbowSweep( uint16_t loops, uint16_t wait, bool trans ) {
   for(i=0; i<loops; i++) {
     rainbowWipe( wait, trans );
     delay(500);
-    wipe( wait, new_color, true, true );
+    wipe( wait, Wheel( rtc.now().second()*255/60 ), true, true );
   }
+}
+
+void greeting( uint16_t wait ) {
+  rainbowWipe( wait, false );
+  rainbowColumns_loop( 1, 4, false );
+  wipe( wait, Wheel( rtc.now().second()*255/60 ), true, true );
 }
 
 // rainbowShutter back and forth
