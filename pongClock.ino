@@ -15,34 +15,42 @@ const int R[7]={-1,16,34,53,72,90,107};
 // Pixel width of each number
 const int w[11]={3,2,3,3,2,3,3,2,3,2,1};
 // Pixel width of column lead
-int v[11]={1,0,0,0,2,0,1,2,1,2,1};
+int v[11]={1,1,0,0,2,0,1,2,1,2,1};
 
 // Initialize LED strip
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(128, PIN, NEO_GRB + NEO_KHZ800);
 
 // Import local packages
 #include "numbers.h"
-#include "patterns.h"
 #include "rainbow_patterns.h"
+#include "patterns.h"
 #include "modes.h"
 
 void setup() {
   // Set up real-time clock and initialize with computer time
   rtc.begin();
-  rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+  if (! rtc.isrunning()) {
+    rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+  }
   // Set up LED strip
   strip.begin();
   strip.setBrightness(25);
   strip.show(); // Initialize all pixels to 'off'
+  // Greeting sequence -- should make a unique greeting sequence
+  rainbowSweep( 1, 40, false, Wheel( rtc.now().second()*255/60 ) );
 }
 
 void loop() {
   // Primary clock functioning
+  //if (rtc.now().second()>57) {    // Used to test hour changes
   if (rtc.now().minute()==59 && rtc.now().second()>57) {
-    rainbowShutter_loop( 5, 4, false, true, true );
+    delay(2000);
+    rainbowShutter_loop( 4, 2, false, true, true );
   }
   else if (rtc.now().second()>57) {
-    rainbowSweep( 1, 40, Wheel( rtc.now().second()*255/60 ) );
+    rainbowSweep( 1, 40, true, Wheel( rtc.now().second()*255/60 ) );
   }
   fullShutter_loop( true );
+  // Secondary - Demo mode
+  //rainbowColumns_loop( 4, 4, true );
 }

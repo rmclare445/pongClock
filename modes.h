@@ -11,15 +11,17 @@ void full_color( uint16_t wait, uint32_t color ){
   }
 }
 
-void rainbow_loop( uint16_t loops, uint16_t wait, bool showTime ) {
+// Cascading colors based on row
+void rainbowCascade_loop( uint16_t loops, uint16_t wait, bool showTime ) {
   for(j=0; j<256*loops; j++) {
-    rainbow( j );
+    rainbowCascade( j );
     if (showTime) {showClock( TMIL, strip.Color(150,150,150) );}
     strip.show();
     delay(wait);
   }
 }
 
+// Basically rainbowCascade but in reverse
 void rainbowRise_loop( uint16_t loops, uint16_t wait, bool showTime ) {
   for(j=0; j<256*loops; j++) {
     rainbowRise( j );
@@ -29,6 +31,7 @@ void rainbowRise_loop( uint16_t loops, uint16_t wait, bool showTime ) {
   }
 }
 
+// Columns of colors move across the matrix
 void rainbowColumns_loop( uint16_t loops, uint16_t wait, bool showTime ) {
   for(j=0; j<256*loops; j++) {
     rainbowColumns( j );
@@ -38,6 +41,7 @@ void rainbowColumns_loop( uint16_t loops, uint16_t wait, bool showTime ) {
   }
 }
 
+// Closes or opens a single color around the center column
 void shutter_loop( uint16_t loops, uint16_t wait, uint32_t color, bool shut, bool showTime ) {
   uint8_t c;
   for(i=0; i<loops; i++) {
@@ -50,13 +54,16 @@ void shutter_loop( uint16_t loops, uint16_t wait, uint32_t color, bool shut, boo
   }
 }
 
+//
 void fullShutter_loop( bool shut ) {
   uint8_t sec;
   sec = rtc.now().second();
-  shutter_loop( 1, 40, Wheel( sec*255/60 ), false, true );
+  shutter_loop( 1, 30, Wheel( sec*255/60 ), false, true );
+  if (rtc.now().second()>57) {return;}
   full_color(300, Wheel( sec*255/60 ));
 }
 
+// Either opens or closes a rainbow pattern around the center column
 void rainbowShutter_loop( uint16_t loops, uint16_t wait, bool shut, bool soft, bool showTime ) {
   for(j=0; j<256*loops; j++) {
     rainbowShutter( j, shut, soft );
@@ -66,14 +73,16 @@ void rainbowShutter_loop( uint16_t loops, uint16_t wait, bool shut, bool soft, b
   }  
 }
 
-void rainbowSweep( uint16_t loops, uint16_t wait, uint32_t new_color ) {
+//
+void rainbowSweep( uint16_t loops, uint16_t wait, bool trans, uint32_t new_color ) {
   for(i=0; i<loops; i++) {
-    rainbowWipe( wait, true );
+    rainbowWipe( wait, trans );
     delay(500);
-    wipe( wait, new_color );
+    wipe( wait, new_color, true, true );
   }
 }
 
+// rainbowShutter back and forth
 void rainbowBreathe( uint16_t loops, uint16_t wait, bool soft, bool showTime ) {
   for(i=0; i<loops; i++) {
     for(j=0; j<256; j++) {

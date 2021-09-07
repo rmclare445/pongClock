@@ -1,3 +1,4 @@
+// Translates column and row number into pixel number
 uint16_t led_num( int col, int row ) {
   if      (row>6)            {return strip.numPixels();}
   else if (row<0)            {return strip.numPixels();}
@@ -10,7 +11,7 @@ uint16_t led_num( int col, int row ) {
   return col + R[row];
 }
 
-
+// Defines number pixel patterns
 void showNumber(int num, int col, uint32_t color) {
   // col is column of bottom left pixel
   //uint32_t color = strip.Color(255, 255, 255);
@@ -94,11 +95,15 @@ void showNumber(int num, int col, uint32_t color) {
 }
 
 
-//// Problem with showing zeros at midnight!
+// Determines how numbers are spced/displayed
 void allNumbers(int hr1, int hr2, int mn1, int mn2, bool colon, uint32_t color) {
+  uint8_t col_spot;
 
-  if (mn1==0 && mn2==7) {v[mn2]=1;}
-  else if (mn2==7) {v[mn2]=2;}
+  if (mn1==0 && mn2==7) {v[7]=1;}
+  else if (mn2==7) {v[7]=2;}
+
+  // Necessary to ensure pretty spacing for ones (see below)
+  v[1]=1;
   
   if (hr1==0) {
 //    int wSum1 = w[hr2] + w[10] + v[10]
@@ -107,25 +112,27 @@ void allNumbers(int hr1, int hr2, int mn1, int mn2, bool colon, uint32_t color) 
 //    int bdry  = 18 - width;
 //    if (bdry%2==0) {int col = bdry/2 + wSum1;}
 //    else {int col = 
-    showNumber(hr2, 8 - w[hr2] - v[10], color);
-    if (colon) {showNumber(-1, 8, color);}
-    showNumber(mn1, 8 + w[10] + v[mn1], color);
-    showNumber(mn2, 8 + w[10] + w[mn1] + v[mn1] + v[mn2], color);
+    if (mn1==4) {col_spot=7;} else {col_spot=8;}
+    showNumber(mn1, col_spot + w[10] + v[mn1], color);
+    // Pretty spacing for ones
+    if ((mn1==0 || mn1==4) && mn2==1) {v[1]=0;}
+    else {v[1]=1;}
   }
   else { // if (hr1==1) {
+    if (mn1==4) {col_spot=8;} else {col_spot=9;}
     //int wSum = w[hr1] + w[hr2] + w[10] + w[mn1] + w[mn2];
-    showNumber(hr1, 9 - w[hr2] - w[hr1] - v[10] - v[hr2], color);
-    showNumber(hr2, 9 - w[hr2] - v[10], color);
-    if (colon) {showNumber(-1, 9, color);}
-    showNumber(mn1, 9 + w[10] + v[mn1], color);
-    showNumber(mn2, 9 + w[10] + w[mn1] + v[mn1] + v[mn2], color);
+    showNumber(hr1, col_spot - w[hr2] - w[hr1] - v[10] - v[hr2], color);
+    showNumber(mn1, col_spot + w[10] + v[mn1], color);
+    // Pretty spacing for ones
+    if ((mn1==0 || mn1==4) && mn2==1) {v[1]=0;}
+    else {v[1]=1;}
   }
-//  else if (hr1==2) {
-//    
-//  }
+  showNumber(hr2, col_spot - w[hr2] - v[10], color);
+  if (colon) {showNumber(-1, col_spot, color);}
+  showNumber(mn2, col_spot + w[10] + w[mn1] + v[mn1] + v[mn2], color);
 }
 
-
+// Feeds clock data into showNumber
 void showClock( bool t_mil, uint32_t color ) {
   uint8_t hr1, hr2, mn1, mn2, now_hour;
   DateTime now = rtc.now();
@@ -143,4 +150,5 @@ void showClock( bool t_mil, uint32_t color ) {
   else {mn1=0; mn2=now.minute();}
   if (now.second()%2==0) {allNumbers(hr1, hr2, mn1, mn2, true, color);}
   else {allNumbers(hr1, hr2, mn1, mn2, false, color);}
+  //allNumbers(0, 7, 0, 1, true, color);    // Used to test number configurations
 }

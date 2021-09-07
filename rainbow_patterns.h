@@ -13,8 +13,8 @@ uint32_t Wheel( byte WheelPos ) {
   return strip.Color(WheelPos * 3, 255 - WheelPos * 3, 0);
 }
 
-//
-void rainbow( uint16_t j ) {
+// Cascading colors based on row
+void rainbowCascade( uint16_t j ) {
   uint16_t i;
   for(i=0; i<strip.numPixels(); i++) {
     strip.setPixelColor(i, Wheel((i+j) & 255));
@@ -31,7 +31,7 @@ void rainbowRise( uint16_t j ) {
   }
 }
 
-// 
+// Columns of colors move across the matrix
 void rainbowColumns( uint16_t j ) {
   uint8_t c, r;
   for(c=1; c<21; c++) {
@@ -41,6 +41,7 @@ void rainbowColumns( uint16_t j ) {
   }
 }
 
+// Either opens or closes a rainbow pattern around the center column
 void rainbowShutter( uint16_t j, bool shut, bool soft ) {
   uint8_t c, r, i, s;
   if (shut) {i=-1;} else {i=1;}
@@ -53,8 +54,9 @@ void rainbowShutter( uint16_t j, bool shut, bool soft ) {
   }
 }
 
+// Wipes a rainbow pattern across the matrix with color based on column number
 void rainbowWipe( uint16_t wait, bool showTime ) {
-  int c, r;
+  uint8_t c, r;
   if (showTime) {showClock( TMIL, strip.Color(150,150,150) );}
   for(c=1; c<21; c++) {
     for(r=0; r<7; r++) {
@@ -62,6 +64,17 @@ void rainbowWipe( uint16_t wait, bool showTime ) {
     }
     strip.show();
     delay(wait);
+  }
+}
+
+// Intended only to succeed rainbowWipe and wipe if time is displayed
+//  This function shows the time under the rainbow layer
+void rainbowWipeFollow( uint8_t col ) {
+  uint8_t c, r;
+  for(c=col; c<21; c++) {
+    for(r=0; r<7; r++) {
+      strip.setPixelColor(led_num(c,r), Wheel(((c*256/20)) & 255));
+    }
   }
 }
 
