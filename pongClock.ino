@@ -6,16 +6,13 @@
 #include "RTClib.h"
 RTC_DS1307 rtc;
 
+// Data pin for LEDs
 #define PIN 6
+// Military time (24-hour clock)
 #define TMIL false
 
-// Sums for finding LED number based on row
-const int R[7]={-1,16,34,53,72,90,107};
-
-// Pixel width of each number
-const int w[11]={3,2,3,3,2,3,3,2,3,2,1};
-// Pixel width of column lead
-int v[11]={1,1,0,0,2,0,1,2,1,2,1};
+const int buttonPin = 2;
+int buttonState = 0;
 
 // Initialize LED strip
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(128, PIN, NEO_GRB + NEO_KHZ800);
@@ -27,6 +24,7 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(128, PIN, NEO_GRB + NEO_KHZ800);
 #include "modes.h"
 
 void setup() {
+  pinMode(buttonPin, INPUT);
   // Set up real-time clock and initialize with computer time
   rtc.begin();
   if (! rtc.isrunning()) {
@@ -41,16 +39,23 @@ void setup() {
 }
 
 void loop() {
-  // Primary clock functioning
-  //if (rtc.now().second()>57) {    // Used to test hour changes
-  if (rtc.now().minute()==59 && rtc.now().second()>57) {
-    delay(2000);
-    rainbowShutter_loop( 4, 2, false, true, true );
-  }
-  else if (rtc.now().second()>57) {
-    rainbowSweep( 1, 40, true );
-  }
-  fullShutter_loop( true );
-  // Secondary - Demo mode
-  //rainbowColumns_loop( 4, 4, true );
+  //buttonState = digitalRead(buttonPin);
+  //if (buttonState == LOW) {
+    // Primary clock functioning
+    //if (rtc.now().second()>57) {    // Used to test hour changes
+    if (rtc.now().minute()==59 && rtc.now().second()>57) {
+      delay(2000);
+      rainbowShutter_loop( 4, 2, false, true, true );
+    }
+    else if (rtc.now().second()>57) {
+      delay(500);
+      rainbowSweep( 1, 40, true );
+    }
+    //fullShutter_loop( true );
+    fullFade_loop( );
+  //}
+  //else {
+    // Secondary - Demo mode
+    //rainbowColumns_loop( 1, 4, true );
+  //}
 }

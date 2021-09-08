@@ -63,6 +63,14 @@ void fullShutter_loop( bool shut ) {
   full_color(300, Wheel( sec*255/60 ));
 }
 
+void fullFade_loop( ) {
+  uint8_t sec;
+  sec = rtc.now().second();
+  strip.fill(( Wheel( sec*255/60 ) ));
+  showClock( TMIL, strip.Color(150,150,150) );
+  strip.show();
+}
+
 // Either opens or closes a rainbow pattern around the center column
 void rainbowShutter_loop( uint16_t loops, uint16_t wait, bool shut, bool soft, bool showTime ) {
   for(j=0; j<256*loops; j++) {
