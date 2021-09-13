@@ -11,8 +11,7 @@ RTC_DS1307 rtc;
 // Military time (24-hour clock)
 #define TMIL false
 
-const int buttonPin = 2;
-int buttonState = 0;
+const int switchPin = 2;
 
 // Initialize LED strip
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(128, PIN, NEO_GRB + NEO_KHZ800);
@@ -24,7 +23,7 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(128, PIN, NEO_GRB + NEO_KHZ800);
 #include "modes.h"
 
 void setup() {
-  pinMode(buttonPin, INPUT);
+  pinMode(switchPin, INPUT);
   // Set up real-time clock and initialize with computer time
   rtc.begin();
   if (! rtc.isrunning()) {
@@ -39,8 +38,7 @@ void setup() {
 }
 
 void loop() {
-  //buttonState = digitalRead(buttonPin);
-  //if (buttonState == LOW) {
+  if (digitalRead(switchPin) == LOW) {
     // Primary clock functioning
     //if (rtc.now().second()>57) {    // Used to test hour changes
     if (rtc.now().minute()==59 && rtc.now().second()>57) {
@@ -53,9 +51,9 @@ void loop() {
     }
     //fullShutter_loop( true );
     fullFade_loop( );
-  //}
-  //else {
+  }
+  else {
     // Secondary - Demo mode
-    //rainbowColumns_loop( 1, 4, true );
-  //}
+    rainbowColumns_loop( 1, 4, true );
+  }
 }
