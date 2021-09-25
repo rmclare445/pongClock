@@ -36,7 +36,7 @@ void rainbowColumns_loop( uint16_t loops, uint16_t wait, bool showTime ) {
   for(j=0; j<256*loops; j++) {
     rainbowColumns( j );
     if (showTime) {
-      if (digitalRead(switchPin) == LOW) {return;}  // For non-greeting interruption by switch
+      if (digitalRead(tmilPin) == LOW) {return;}  // For non-greeting interruption by switch
       showClock( TMIL, strip.Color(150,150,150) );
     }
     strip.show();
@@ -67,8 +67,7 @@ void fullShutter_loop( bool shut ) {
 }
 
 void fullFade_loop( ) {
-  uint8_t sec;
-  sec = rtc.now().second();
+  uint8_t sec = rtc.now().second();
   strip.fill(( Wheel( sec*255/60 ) ));
   showClock( TMIL, strip.Color(150,150,150) );
   strip.show();
@@ -81,7 +80,15 @@ void rainbowShutter_loop( uint16_t loops, uint16_t wait, bool shut, bool soft, b
     if (showTime) {showClock( TMIL, strip.Color(150,150,150) );}
     strip.show();
     delay(wait);
-  }  
+  }
+  int c;
+  uint8_t sec = rtc.now().second();
+  for(c=1; c<11; c++) {
+    shutter( c, false, Wheel( sec*255/60 ) );
+    if (showTime) {showClock( TMIL, strip.Color(150,150,150) );}
+    strip.show();
+    delay(20);
+  }
 }
 
 //
@@ -96,9 +103,9 @@ void rainbowSweep( uint16_t loops, uint16_t wait, bool trans ) {
 void greeting( uint16_t wait ) {
   rainbowWipe( wait, false );
   rainbowColumns_loop( 1, 4, false );
-  if (digitalRead(switchPin) == LOW) 
-    {wipe( wait, Wheel( rtc.now().second()*255/60 ), true, true );
-  }
+  //if (digitalRead(modePin) == LOW) {// this is for non-demo mode, don't mix up with tmil
+    wipe( wait, Wheel( rtc.now().second()*255/60 ), true, true );
+  //}
 }
 
 // rainbowShutter back and forth

@@ -7,14 +7,21 @@
 RTC_DS1307 rtc;
 
 // Data pin for LEDs
-#define PIN 6
+#define LPIN 6
+// Analog pin for potentiometer
+#define PPIN 2
 // Military time (24-hour clock)
-#define TMIL false
+bool TMIL;
 
-const int switchPin = 2;
+// Digital input pin for switch
+const int tmilPin = 2;
+//const int modePin = 3;
+
+uint8_t brt, prev_brt;
+uint8_t rtc_sec;
 
 // Initialize LED strip
-Adafruit_NeoPixel strip = Adafruit_NeoPixel(128, PIN, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel strip = Adafruit_NeoPixel(128, LPIN, NEO_GRB + NEO_KHZ800);
 
 // Import local packages
 #include "numbers.h"
@@ -23,7 +30,12 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(128, PIN, NEO_GRB + NEO_KHZ800);
 #include "modes.h"
 
 void setup() {
-  pinMode(switchPin, INPUT);
+  // Military time switch initialization
+  pinMode(tmilPin, INPUT);
+  if (digitalRead(tmilPin) == LOW) { TMIL=false;}
+  else { TMIL=true;}
+  // Demo mode switch initialization
+  //pinMode(modePin, INPUT);
   // Set up real-time clock and initialize with computer time
   rtc.begin();
   if (! rtc.isrunning()) {
@@ -38,22 +50,31 @@ void setup() {
 }
 
 void loop() {
-  if (digitalRead(switchPin) == LOW) {
+//  brt = min(analogRead(PPIN), 1000);
+//  if (brt != prev_brt) {
+//  if ((brt-prev_brt)<10) {
+//    strip.setBrightness( round(100 * (brt/1000.)) );
+//    prev_brt = brt;
+//  }
+  if (digitalRead(tmilPin) == LOW) { TMIL=false;}
+  else { TMIL=true;}
+  
     // Primary clock functioning
-    //if (rtc.now().second()>57) {    // Used to test hour changes
-    if (rtc.now().minute()==59 && rtc.now().second()>57) {
+    rtc_sec = rtc.now().second();
+    //if (rtc_sec>57) {    // Used to test hour changes
+    if (rtc.now().minute()==59 && rtc_sec>57) {
       delay(2000);
       rainbowShutter_loop( 4, 2, false, true, true );
     }
-    else if (rtc.now().second()>57) {
-      delay(500);
+    else if (rtc_sec>57) {
+      delay(750);
       rainbowSweep( 1, 40, true );
     }
     //fullShutter_loop( true );
     fullFade_loop( );
-  }
-  else {
-    // Secondary - Demo mode
-    rainbowColumns_loop( 1, 4, true );
-  }
+  //}
+  //else {
+  //  // Secondary - Demo mode
+  //  rainbowColumns_loop( 1, 4, true );
+  //}
 }

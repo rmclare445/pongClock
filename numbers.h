@@ -158,6 +158,7 @@ void showClock( bool t_mil, uint32_t color ) {
   uint8_t hr1, hr2, mn1, mn2, now_hour;
   DateTime now = rtc.now();
   if (! t_mil && now.hour() > 12) {now_hour = now.hour() - 12;}
+  else if (! t_mil && now.hour()==0) {now_hour = 12;}
   else {now_hour = now.hour();}
   if (now_hour>9) {
     hr1 = floor(now_hour/10);
