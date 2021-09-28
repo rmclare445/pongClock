@@ -15,7 +15,7 @@ bool TMIL;
 
 // Digital input pin for switch
 const int tmilPin = 2;
-//const int modePin = 3;
+const int modePin = 3;
 
 uint8_t brt, prev_brt;
 uint8_t rtc_sec;
@@ -32,10 +32,10 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(128, LPIN, NEO_GRB + NEO_KHZ800);
 void setup() {
   // Military time switch initialization
   pinMode(tmilPin, INPUT);
-  if (digitalRead(tmilPin) == LOW) { TMIL=false;}
-  else { TMIL=true;}
+  if (digitalRead(tmilPin) == LOW) {TMIL=false;}
+  else {TMIL=true;}
   // Demo mode switch initialization
-  //pinMode(modePin, INPUT);
+  pinMode(modePin, INPUT);
   // Set up real-time clock and initialize with computer time
   rtc.begin();
   if (! rtc.isrunning()) {
@@ -56,9 +56,10 @@ void loop() {
 //    strip.setBrightness( round(100 * (brt/1000.)) );
 //    prev_brt = brt;
 //  }
-  if (digitalRead(tmilPin) == LOW) { TMIL=false;}
-  else { TMIL=true;}
-  
+  if (digitalRead(tmilPin) == LOW) {TMIL=false;}
+  else {TMIL=true;}
+
+  if (digitalRead(modePin) == LOW) {
     // Primary clock functioning
     rtc_sec = rtc.now().second();
     //if (rtc_sec>57) {    // Used to test hour changes
@@ -72,9 +73,9 @@ void loop() {
     }
     //fullShutter_loop( true );
     fullFade_loop( );
-  //}
-  //else {
-  //  // Secondary - Demo mode
-  //  rainbowColumns_loop( 1, 4, true );
-  //}
+  }
+  else {
+    // Secondary - Demo mode
+    rainbowColumns_loop( 1, 4, true );
+  }
 }
