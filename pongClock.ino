@@ -1,3 +1,23 @@
+/*
+ * 
+ * 
+ * 
+ * 
+ * Should rebuild codebase so that demo functions are entirely separate from
+ *  clock functions.  This should fix delays like those present in demo mode
+ *  while switching showTime and back to clock function.
+ * 
+ * Really should just rebuild codebase in general.
+ *  Move all TMIL switch statements to showClock function!
+ * 
+ * 
+ * 
+ */
+
+
+
+
+
 // Import Adafruit Neopixel library for LEDs
 #include <Adafruit_NeoPixel.h>
 
@@ -28,6 +48,7 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(128, LPIN, NEO_GRB + NEO_KHZ800);
 #include "rainbow_patterns.h"
 #include "patterns.h"
 #include "modes.h"
+#include "demos.h"
 
 void setup() {
   // Military time switch initialization
@@ -52,7 +73,7 @@ void setup() {
 void loop() {
 //  brt = min(analogRead(PPIN), 1000);
 //  if (brt != prev_brt) {
-//  if ((brt-prev_brt)<10) {
+//  if ((brt-prev_brt)>10) {
 //    strip.setBrightness( round(100 * (brt/1000.)) );
 //    prev_brt = brt;
 //  }
@@ -76,6 +97,7 @@ void loop() {
   }
   else {
     // Secondary - Demo mode
-    rainbowColumns_loop( 1, 4, true );
+    //rainbowColumns_loop( 1, 4, true );
+    demo_random( 15 );
   }
 }

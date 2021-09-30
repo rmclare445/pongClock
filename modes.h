@@ -127,3 +127,13 @@ void rainbowBreathe( uint16_t loops, uint16_t wait, bool soft, bool showTime ) {
     }    
   }
 }
+
+// 
+void rainbowFlash( uint16_t wait, bool showTime ) {
+  for(i=0; i<256; i++) {
+    strip.fill(( Wheel( i ) ));
+    if (showTime) {showClock( TMIL, strip.Color(150,150,150) );}
+    strip.show();
+    delay(wait);
+  }
+}
